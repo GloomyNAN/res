@@ -4,6 +4,8 @@
 
 ## tool使用
 
+![工具使用](./.assets/tools.png)
+
 1. Feature: 根据给定名称创建一个版本，包含`assets/`、`version.md`、`test.md`、`relase.md`、`alter.sql`等
 2. Release: 将`pre`开通的文件夹修改为`v`开头；
 3. Archives: 根据给定日期将文件夹归档；

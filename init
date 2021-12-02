@@ -6,7 +6,6 @@
 # const
 PROJECT_OPTIONS_LIST=(系统1 系统2 系统3)
 PROJECT_PATHS_LIST=("./app1" "./app2" "./app3")
-PROJECT_PATH
 ARCHIVES_PATH='./archives'
 TEMPLATE_PATH='./.template'
 
