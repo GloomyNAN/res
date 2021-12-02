@@ -60,8 +60,8 @@ function archives(){
     echo "---------------------------"
     echo ""
     
-    if [ ! -d $PROJECT_PATH ];then
-      mkdir $PROJECT_PATH
+    if [ ! -d $ARCHIVES_PATH/$PROJECT_PATH ];then
+      mkdir -p $ARCHIVES_PATH/$PROJECT_PATH
     fi
     
     [ -z "$Archives_Days" ] && Archives_Days=120
