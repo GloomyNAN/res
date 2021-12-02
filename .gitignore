@@ -1,0 +1,15 @@
+# phpstorm project files
+.idea
+.phpstorm.meta.php
+
+#vi
+.swp
+
+# windows thumbnail cache
+Thumbs.db
+
+# Mac DS_Store Files
+.DS_Store
+
+# vscode
+.vscode/

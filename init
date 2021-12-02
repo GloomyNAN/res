@@ -1,0 +1,146 @@
+# !/bin/bash
+# Author: GloomyNAN
+# Date: 2019-12-18
+# description:  res工具箱
+
+# const
+PROJECT_OPTIONS_LIST=(系统1 系统2 系统3)
+PROJECT_PATHS_LIST=("./app1" "./app2" "./app3")
+PROJECT_PATH
+ARCHIVES_PATH='./archives'
+TEMPLATE_PATH='./.template'
+
+function feature(){
+    echo "老板，给个版本号？"
+    echo "其实就是copy一份template出来。。。"
+    read -p "Please input a number:(e.g. v1.0)" Feature_Version
+    echo ""
+    echo "---------------------------"
+    echo "feature version = $Feature_Version"
+    echo "---------------------------"
+    echo ""
+
+    if [ ! -d $PROJECT_PATH ];then
+      mkdir $PROJECT_PATH
+    fi
+
+    cp -r $TEMPLATE_PATH $PROJECT_PATH/pre-$Feature_Version
+    echo "版本创建成功！";
+}
+
+function release(){
+    find $PROJECT_PATH -type d -name pre*;
+    echo ""
+    echo ""
+    echo "老板，要发布个需求？"
+    echo "其实就是将pre-前缀改为v"
+    read -p "Please input a number:(e.g. 190101)" Feature_Version
+    echo ""
+    echo "---------------------------"
+    echo "feature version = $Feature_Version"
+    echo "---------------------------"
+    echo ""
+
+    if [ -d "$PROJECT_PATH/pre-$Feature_Version" ]; then
+        git mv $PROJECT_PATH/pre-$Feature_Version $PROJECT_PATH/v$Feature_Version
+        echo "版本发布成功！";
+    else
+         echo "版本不存在！";
+    fi
+}
+
+function archives(){
+    echo ""
+    echo ""
+    echo "给个天数，见鬼去吧!"
+    echo "将X天之前版本移动到Archives文件夹"
+    read -p "Please input a number:(Default:120)" Archives_Days
+    echo ""
+    echo "---------------------------"
+    echo "Archives Days = $Archives_Days"
+    echo "---------------------------"
+    echo ""
+    
+    if [ ! -d $PROJECT_PATH ];then
+      mkdir $PROJECT_PATH
+    fi
+    
+    [ -z "$Archives_Days" ] && Archives_Days=120
+    find $PROJECT_PATH -type d -mtime +$Archives_Days -name v* -exec git mv {} $ARCHIVES_PATH/$PROJECT_PATH \;
+    echo "归档成功！";
+}
+
+
+function pre_init(){
+    echo ""
+    echo "#############################################################"
+    echo "# Tool For Res                                              #"
+    echo "# Commonds:{feature|release|archives|}                      #"
+    echo "#############################################################"
+    echo ""
+    while true
+    do
+    echo "骚年，你想干啥？:"
+    echo -e "\t\033[32m1\033[0m. Feature   (创建一个新版本)"
+    echo -e "\t\033[32m2\033[0m. Release   (发布一个版本)"
+    echo -e "\t\033[32m3\033[0m. Archives  (归档旧版本)"
+    read -p "Please input a number:(Default 1)" Next_Action
+
+    [ -z "$Next_Action" ] && Next_Action=1
+    case $Next_Action in
+        1|2|3)
+        echo ""
+        echo "---------------------------"
+        echo "You choose = $Next_Action"
+        echo "---------------------------"
+        echo ""
+        break
+        ;;
+        *)
+        echo "Input error! Please only input number 1,2,3"
+    esac
+    done
+
+    # chose project
+    echo "请选择一个项目呗？"
+    for(( i=0;i<${#PROJECT_OPTIONS_LIST[@]};i++)) do
+    echo -e "\t\033[32m$i\033[0m. ${PROJECT_OPTIONS_LIST[i]}"
+    done;
+
+    read -p "Please input a number:(Default 0)" PROJECT_OPTIONS
+    [ -z "$PROJECT_OPTIONS" ] && PROJECT_OPTIONS=0
+    PROJECT_PATH=${PROJECT_PATHS_LIST[$PROJECT_OPTIONS]}
+
+    clear
+    if [ $Next_Action -eq 1 ]; then
+        feature
+    elif [ $Next_Action -eq 2 ]; then
+        release
+    elif [ $Next_Action -eq 3 ]; then
+        archives
+    fi
+}
+
+Archives_Days=3
+
+# echo "find $PROJECT_PATH -type f -mtime +$Archives_Days -exec mv $ARCHIVES_PATH {} \\"
+# exit 0
+
+# Initialization setup
+action=$1
+# [  -z $1 ] && action=feature
+
+case "$action" in
+feature)
+    feature
+    ;;
+release)
+    release
+    ;;
+archives)
+   archives
+    ;;
+*)
+  pre_init
+    ;;
+esac
